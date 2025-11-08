@@ -1,0 +1,93 @@
+[gd_scene load_steps=6 format=3 uid="uid://du64i2mv3kfv2"]
+
+[ext_resource type="Script" uid="uid://kjt3dqn7gt4s" path="res://scripts/main.gd" id="1_2m5h3"]
+[ext_resource type="Script" uid="uid://b45irb86srp4g" path="res://scripts/flag_counter.gd" id="1_p5s82"]
+[ext_resource type="Script" uid="uid://dy7sfphvgrjpu" path="res://scripts/camera_control.gd" id="1_xhb67"]
+[ext_resource type="Script" uid="uid://bci7fv1akbxma" path="res://scripts/game_board.gd" id="2_xhb67"]
+[ext_resource type="Script" uid="uid://dcjlsgs2mqwic" path="res://scripts/menu.gd" id="3_f7qek"]
+
+[node name="Minesweeper" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 1
+script = ExtResource("1_2m5h3")
+
+[node name="Panel" type="Panel" parent="."]
+layout_mode = 1
+anchors_preset = -1
+anchor_right = 1.0
+anchor_bottom = 0.15
+
+[node name="MarginContainer" type="MarginContainer" parent="Panel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 15
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 15
+theme_override_constants/margin_bottom = 10
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Panel/MarginContainer"]
+layout_mode = 2
+
+[node name="FlagCounter" type="Label" parent="Panel/MarginContainer/HBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 2
+theme_override_font_sizes/font_size = 32
+text = "000"
+script = ExtResource("1_p5s82")
+
+[node name="Reset" type="Button" parent="Panel/MarginContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 10
+size_flags_vertical = 4
+theme_override_font_sizes/font_size = 24
+text = "Reset"
+script = ExtResource("3_f7qek")
+
+[node name="SubViewportContainer" type="SubViewportContainer" parent="."]
+layout_mode = 1
+anchors_preset = -1
+anchor_top = 0.15
+anchor_right = 1.0
+anchor_bottom = 1.0
+stretch = true
+mouse_target = true
+
+[node name="SubViewport" type="SubViewport" parent="SubViewportContainer"]
+handle_input_locally = false
+gui_embed_subwindows = true
+size = Vector2i(360, 680)
+render_target_update_mode = 4
+
+[node name="Camera2D" type="Camera2D" parent="SubViewportContainer/SubViewport"]
+zoom = Vector2(0.56, 0.56)
+limit_enabled = false
+position_smoothing_enabled = true
+position_smoothing_speed = 20.0
+script = ExtResource("1_xhb67")
+
+[node name="GameBoard" type="GridContainer" parent="SubViewportContainer/SubViewport"]
+unique_name_in_owner = true
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -2.0
+offset_right = -210.0
+offset_bottom = -506.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+columns = 2
+script = ExtResource("2_xhb67")
+
+[connection signal="pressed" from="Panel/MarginContainer/HBoxContainer/Reset" to="Panel/MarginContainer/HBoxContainer/Reset" method="_on_pressed"]

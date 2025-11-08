@@ -1,0 +1,46 @@
+[gd_scene load_steps=2 format=3 uid="uid://0beuu0odluio"]
+
+[ext_resource type="Script" uid="uid://bkrljxl7kh2on" path="res://scripts/cell.gd" id="1_upbjj"]
+
+[node name="Cell" type="Control"]
+layout_mode = 3
+anchors_preset = 0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+script = ExtResource("1_upbjj")
+
+[node name="ColorRect" type="ColorRect" parent="."]
+layout_mode = 0
+offset_right = 50.0
+offset_bottom = 50.0
+mouse_filter = 1
+color = Color(0, 0, 0, 1)
+
+[node name="ColorRect2" type="ColorRect" parent="."]
+layout_mode = 0
+offset_left = 1.0
+offset_top = 1.0
+offset_right = 49.0
+offset_bottom = 49.0
+mouse_filter = 1
+color = Color(0.5019608, 0.5019608, 0.5019608, 1)
+
+[node name="Content" type="Label" parent="."]
+visible = false
+custom_minimum_size = Vector2(48, 48)
+layout_mode = 0
+offset_left = 1.0
+offset_top = 1.0
+offset_right = 49.0
+offset_bottom = 49.0
+mouse_filter = 1
+theme_override_font_sizes/font_size = 32
+text = "F"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="TapTimer" type="Timer" parent="."]
+wait_time = 0.35
+one_shot = true
+
+[connection signal="timeout" from="TapTimer" to="." method="_toggle_flag"]

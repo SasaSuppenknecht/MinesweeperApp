@@ -1,0 +1,44 @@
+; Engine configuration file.
+; It's best edited using the editor UI and not directly,
+; since the parameters that go here are not all obvious.
+;
+; Format:
+;   [section] ; section goes between []
+;   param=value ; assign values to parameters
+
+config_version=5
+
+[application]
+
+config/name="minesweeper"
+run/main_scene="uid://du64i2mv3kfv2"
+config/features=PackedStringArray("4.5", "Mobile")
+run/max_fps=30
+run/low_processor_mode=true
+config/icon="res://icon.svg"
+
+[autoload]
+
+LevelGenerator="*res://scripts/level_generator.gd"
+EventBus="*res://scripts/event_bus.gd"
+
+[display]
+
+window/size/viewport_width=360
+window/size/viewport_height=800
+window/stretch/mode="canvas_items"
+window/handheld/orientation=1
+
+[editor_plugins]
+
+enabled=PackedStringArray()
+
+[input_devices]
+
+pointing/android/enable_pan_and_scale_gestures=true
+pointing/emulate_touch_from_mouse=true
+
+[rendering]
+
+renderer/rendering_method="mobile"
+textures/vram_compression/import_etc2_astc=true
