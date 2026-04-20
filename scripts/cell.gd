@@ -11,6 +11,8 @@ var is_bomb : bool
 var _has_flag : bool = false
 var _content : String = ""
 
+static var tap_start_position : Vector2
+
 
 func set_content(content: int):
 	if content == preload("res://scripts/generator_instance.gd").BOMB:
@@ -43,8 +45,24 @@ func reset_cell():
 	$Content.text = FLAG_LETTER
 
 
+func _input(event):
+	if not $TapTimer.is_stopped():
+		if event is InputEventScreenDrag:
+			var localPosition : Vector2 = event.position
+			print("DragEvent:")
+			print(tap_start_position)
+			print(localPosition)
+			print(tap_start_position.distance_squared_to(localPosition))
+			if tap_start_position.distance_squared_to(localPosition) > 20:
+				$TapTimer.stop()
+		elif event is InputEventPanGesture:
+			$TapTimer.stop()
+
+
 func _gui_input(event):
 	if event is InputEventScreenTouch:
+		print("TouchEvent:")
+		print(event.position)
 		if not _has_flag:
 			if is_revealed():
 				event.canceled = true
@@ -55,10 +73,10 @@ func _gui_input(event):
 				return
 			
 		if event.is_pressed():
+			tap_start_position = get_global_transform_with_canvas() * event.position
 			$TapTimer.start()
 		else:
 			$TapTimer.stop()
-		
 		
 func _toggle_flag():
 	_has_flag = not _has_flag
