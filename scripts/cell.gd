@@ -33,6 +33,8 @@ func reveal_cell(recurse: bool = true):
 
 	if _content == "0" and recurse:
 		for group in get_groups():
+			if group.begins_with("_"):
+				continue
 			get_tree().call_group(group, "reveal_cell", false)
 
 
@@ -48,12 +50,7 @@ func reset_cell():
 func _input(event):
 	if not $TapTimer.is_stopped():
 		if event is InputEventScreenDrag:
-			var localPosition : Vector2 = event.position
-			print("DragEvent:")
-			print(tap_start_position)
-			print(localPosition)
-			print(tap_start_position.distance_squared_to(localPosition))
-			if tap_start_position.distance_squared_to(localPosition) > 20:
+			if tap_start_position.distance_squared_to(event.position) > 20:
 				$TapTimer.stop()
 		elif event is InputEventPanGesture:
 			$TapTimer.stop()
@@ -61,8 +58,7 @@ func _input(event):
 
 func _gui_input(event):
 	if event is InputEventScreenTouch:
-		print("TouchEvent:")
-		print(event.position)
+		accept_event()
 		if not _has_flag:
 			if is_revealed():
 				event.canceled = true
@@ -77,6 +73,7 @@ func _gui_input(event):
 			$TapTimer.start()
 		else:
 			$TapTimer.stop()
+		
 		
 func _toggle_flag():
 	_has_flag = not _has_flag
