@@ -1,5 +1,7 @@
 extends GridContainer
 
+signal level_created
+
 const SAVE_PATH = "user://savegame.save"
 const CELL = preload("res://scenes/cell.tscn")
 const HIGHLIGHT_CELL = preload("res://scenes/highlight_cell.tscn")
@@ -42,6 +44,7 @@ func create_level():
 	if FileAccess.file_exists(SAVE_PATH):
 		DirAccess.remove_absolute(SAVE_PATH)
 	_build_grid(board)
+	level_created.emit()
 
 	
 func _build_grid(board: LevelGenerator.Board):

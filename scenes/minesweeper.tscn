@@ -70,7 +70,6 @@ render_target_update_mode = 4
 
 [node name="Camera2D" type="Camera2D" parent="SubViewportContainer/SubViewport" unique_id=1531308292]
 zoom = Vector2(0.56, 0.56)
-limit_enabled = false
 position_smoothing_enabled = true
 position_smoothing_speed = 20.0
 script = ExtResource("1_xhb67")
