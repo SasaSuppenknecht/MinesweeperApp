@@ -15,8 +15,8 @@ const FLAGGED = 44
 var _cells_left : int
 var _last_revealed : Cell = null
 
-var grid_size := 10
-var bomb_count := 30
+var grid_size := 16
+var bomb_count := 40
 
 
 func _ready():
