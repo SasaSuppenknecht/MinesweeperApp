@@ -1,8 +1,6 @@
 - Tutorial for controls (maybe settings?)
 - Settings for continue button
 - Single tap instead of double tap
-- Level size setting
 - different save states
 - better textures
 - different styles
-- limit camera movement
