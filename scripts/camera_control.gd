@@ -1,8 +1,8 @@
 extends Camera2D
 
 
-const MIN_ZOOM = Vector2(0.5, 0.5)
-const MAX_ZOOM = Vector2(2, 2)
+const MIN_ZOOM = Vector2(0.2, 0.2)
+const MAX_ZOOM = Vector2(2.5, 2.5)
 
 const CAMERA_LIMIT_MARGIN = Vector2(100, 100)
 

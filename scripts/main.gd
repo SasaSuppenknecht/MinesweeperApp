@@ -26,7 +26,6 @@ func _configure_dialog(dialog: AcceptDialog):
 	dialog.title = ""
 	dialog.dialog_close_on_escape = false
 	dialog.add_theme_icon_override("close", PlaceholderTexture2D.new())
-	dialog.unfocusable = true
 	
 	dialog.confirmed.connect($%GameBoard.create_level)
 	add_child(dialog)

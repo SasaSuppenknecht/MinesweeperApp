@@ -19,7 +19,7 @@ var running := true
 func _init():
 	rng = RandomNumberGenerator.new()
 	rng.randomize()
-	rng.seed = 42
+	#rng.seed = 42
 
 @warning_ignore_start("narrowing_conversion")
 func create_grid(size: int, number_of_bombs: int, result_callback: Callable, surrounding_neighbours : Array[PackedInt32Array]) -> void:

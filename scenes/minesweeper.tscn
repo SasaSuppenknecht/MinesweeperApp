@@ -6,6 +6,12 @@
 [ext_resource type="Script" uid="uid://baw37j0j8ryyq" path="res://scripts/level_settings.gd" id="2_f7qek"]
 [ext_resource type="Script" uid="uid://bci7fv1akbxma" path="res://scripts/game_board.gd" id="2_xhb67"]
 
+[sub_resource type="GDScript" id="GDScript_f7qek"]
+script/source = "extends Button
+
+
+"
+
 [node name="Minesweeper" type="Control" unique_id=923418698]
 layout_mode = 3
 anchors_preset = 15
@@ -15,6 +21,13 @@ grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 1
 script = ExtResource("1_2m5h3")
+
+[node name="ResetConfirmation" type="ConfirmationDialog" parent="." unique_id=1716652435]
+oversampling_override = 1.0
+initial_position = 1
+size = Vector2i(268, 100)
+ok_button_text = "Confirm"
+dialog_text = "Level will be reset. Are you sure?"
 
 [node name="LevelSettings" type="ConfirmationDialog" parent="." unique_id=2054589235]
 oversampling_override = 1.0
@@ -38,6 +51,7 @@ text = "Grid Size:"
 unique_name_in_owner = true
 layout_mode = 2
 min_value = 3.0
+max_value = 50.0
 value = 3.0
 rounded = true
 
@@ -93,6 +107,7 @@ size_flags_horizontal = 10
 size_flags_vertical = 4
 theme_override_font_sizes/font_size = 24
 text = "Reset"
+script = SubResource("GDScript_f7qek")
 
 [node name="SubViewportContainer" type="SubViewportContainer" parent="." unique_id=22694879]
 layout_mode = 1
@@ -127,8 +142,11 @@ size_flags_vertical = 3
 columns = 2
 script = ExtResource("2_xhb67")
 
+[connection signal="canceled" from="ResetConfirmation" to="ResetConfirmation" method="hide"]
+[connection signal="confirmed" from="ResetConfirmation" to="SubViewportContainer/SubViewport/GameBoard" method="create_level"]
 [connection signal="about_to_popup" from="LevelSettings" to="LevelSettings" method="_on_about_to_popup"]
 [connection signal="canceled" from="LevelSettings" to="LevelSettings" method="_on_canceled"]
 [connection signal="confirmed" from="LevelSettings" to="LevelSettings" method="_on_confirmed"]
+[connection signal="value_changed" from="LevelSettings/VBoxContainer/GridSize" to="LevelSettings" method="_on_grid_size_value_changed"]
 [connection signal="pressed" from="Panel/MarginContainer/HBoxContainer/Settings" to="LevelSettings" method="_on_settings_pressed"]
-[connection signal="pressed" from="Panel/MarginContainer/HBoxContainer/Reset" to="SubViewportContainer/SubViewport/GameBoard" method="create_level"]
+[connection signal="pressed" from="Panel/MarginContainer/HBoxContainer/Reset" to="ResetConfirmation" method="popup_centered"]

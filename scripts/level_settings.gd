@@ -21,5 +21,9 @@ func _on_about_to_popup():
 	%BombCount.value = %GameBoard.bomb_count
 
 
+func _on_grid_size_value_changed(value: float) -> void:
+	%BombCount.max_value = minf(0.42 * value * value, 1000)
+
+
 func _on_settings_pressed():
 	popup_centered()
