@@ -1,50 +1,75 @@
 extends Control
 class_name Cell
 
+@export var state: Field = Field.BLANK:
+	set(value):
+		($Sprite2D.texture as AtlasTexture).region.position.x = value * TEXTURE_SIZE
+		state = value
 
-const GRAY = Color(0.502, 0.502, 0.502)
-const ORANGE = Color.ORANGE
+enum Field {
+	BLANK, FLAG, ZERO, ONE, TWO, THREE, FOUR, FIVE, SIX, SEVEN, EIGHT, BOMB
+}
+
+const TEXTURE_SIZE = 100
+const BASE_NUMBER_OFFSET = 2
+const BOMB = 9
+
 const BOMB_LETTER = "B"
 const FLAG_LETTER = "F"
 
-var is_bomb : bool
-var _has_flag : bool = false
-var _content : String = ""
+var _has_flag: bool = false
+var _content: int = -1
 
-static var tap_start_position : Vector2
+static var tap_start_position: Vector2
+static var start_cell : Cell = null
 
 
 func set_content(content: int):
-	if content == preload("res://scripts/generator_instance.gd").BOMB:
-		_content = BOMB_LETTER
-		is_bomb = true
-		#$ColorRect2.color = Color.RED
+	if content == BOMB:
+		_content = BOMB
 	else:
-		_content = str(content)
-		is_bomb = false
+		_content = content
 
 
 func reveal_cell(recurse: bool = true):
-	$ColorRect2.color = GRAY
-	$Content.text = _content
 	if not is_revealed():
+		if self == start_cell:
+			remove_child(get_child(0))
 		EventBus.cell_revealed.emit(self)
-	$Content.show()
+	
+	if _content == BOMB:
+		state = Field.BOMB
+	else:
+		state = (BASE_NUMBER_OFFSET + _content) as Field
 
-	if _content == "0" and recurse:
+	if _content == 0 and recurse:
 		for group in get_groups():
 			if group.begins_with("_"):
 				continue
 			get_tree().call_group(group, "reveal_cell", false)
 
 
+func make_start_cell():
+	var colorRect := ColorRect.new()
+	colorRect.color = Color.ORANGE
+	colorRect.size = Vector2(56, 56)
+	colorRect.position = Vector2(-3, -3)
+	colorRect.mouse_filter = Control.MOUSE_FILTER_PASS
+	add_child(colorRect)
+	move_child(colorRect, 0)
+	start_cell = self
+
+
+func hides_bomb():
+	return _content == BOMB
+
+
 func is_revealed():
-	return $Content.visible and $Content.text != FLAG_LETTER
+	return state != Field.BLANK && state != Field.FLAG
 
 
 func reset_cell():
-	$Content.hide()
-	$Content.text = FLAG_LETTER
+	state = Field.BLANK
 
 
 func _input(event):
@@ -77,10 +102,9 @@ func _gui_input(event):
 		
 func _toggle_flag():
 	_has_flag = not _has_flag
-	$Content.visible = _has_flag
 	if _has_flag:
-		$ColorRect2.color = ORANGE
+		state = Field.FLAG
 		EventBus.flag_placed.emit()
 	else:
-		$ColorRect2.color = GRAY
+		state = Field.BLANK
 		EventBus.flag_removed.emit()

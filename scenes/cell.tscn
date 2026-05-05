@@ -1,6 +1,7 @@
 [gd_scene format=3 uid="uid://0beuu0odluio"]
 
 [ext_resource type="Script" uid="uid://bkrljxl7kh2on" path="res://scripts/cell.gd" id="1_upbjj"]
+[ext_resource type="Texture2D" uid="uid://cd58xvytj2dm8" path="res://field_atlas_texture.tres" id="2_0s7o3"]
 
 [node name="Cell" type="Control" unique_id=982062437]
 layout_mode = 3
@@ -9,35 +10,10 @@ size_flags_horizontal = 3
 size_flags_vertical = 3
 script = ExtResource("1_upbjj")
 
-[node name="ColorRect" type="ColorRect" parent="." unique_id=832542069]
-layout_mode = 0
-offset_right = 50.0
-offset_bottom = 50.0
-mouse_filter = 1
-color = Color(0, 0, 0, 1)
-
-[node name="ColorRect2" type="ColorRect" parent="." unique_id=1699527182]
-layout_mode = 0
-offset_left = 1.0
-offset_top = 1.0
-offset_right = 49.0
-offset_bottom = 49.0
-mouse_filter = 1
-color = Color(0.5019608, 0.5019608, 0.5019608, 1)
-
-[node name="Content" type="Label" parent="." unique_id=890230403]
-visible = false
-custom_minimum_size = Vector2(48, 48)
-layout_mode = 0
-offset_left = 1.0
-offset_top = 1.0
-offset_right = 49.0
-offset_bottom = 49.0
-mouse_filter = 1
-theme_override_font_sizes/font_size = 32
-text = "F"
-horizontal_alignment = 1
-vertical_alignment = 1
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=893011689]
+position = Vector2(25, 25)
+scale = Vector2(0.5, 0.5)
+texture = ExtResource("2_0s7o3")
 
 [node name="TapTimer" type="Timer" parent="." unique_id=1476401136]
 wait_time = 0.35
