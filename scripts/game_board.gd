@@ -4,9 +4,6 @@ signal level_created
 
 const SAVE_PATH = "user://savegame.save"
 const CELL = preload("res://scenes/cell.tscn")
-const HIGHLIGHT_CELL = preload("res://scenes/highlight_cell.tscn")
-const HIGHTLIGHT_CELL_SCRIPT = preload("res://scripts/highlight_cell.gd")
-const GENERATOR_INSTANCE = preload("res://scripts/generator_instance.gd")
 const CELL_SIZE = 50
 const SEP = 2
 
@@ -54,11 +51,9 @@ func _build_grid(board: LevelGenerator.Board):
 	_resize_gameboard(grid_size)
 	# Set up field
 	for i in grid_size * grid_size:
-		var cell: Cell
+		var cell: Cell = CELL.instantiate()
 		if i == board.start_field:
-			cell = HIGHLIGHT_CELL.instantiate()
-		else: 
-			cell = CELL.instantiate()
+			cell.make_start_cell()
 		cell.set_content(board.grid[i])
 		add_child(cell)
 		#cell.reveal_cell(false)
@@ -83,7 +78,7 @@ func _resize_gameboard(length: int):
 
 
 func _on_cell_revealed(cell: Cell):
-	if not cell.is_bomb:
+	if not cell.hides_bomb():
 		_cells_left -= 1
 		if _cells_left == 0:
 			EventBus.game_won.emit()
@@ -109,10 +104,10 @@ func save_data():
 	var group_to_index : Dictionary[String, PackedInt32Array] = {}
 	for i in get_children().size():
 		var child : Cell = get_children()[i]
-		if child is HIGHTLIGHT_CELL_SCRIPT:
+		if child == Cell.start_cell:
 			index_start_cell = i
-		if child._content == Cell.BOMB_LETTER:
-			save_file.store_8(GENERATOR_INSTANCE.BOMB)
+		if child._content == Cell.BOMB:
+			save_file.store_8(Cell.BOMB)
 		else:
 			save_file.store_8(int(child._content))
 		if child.is_revealed():
@@ -154,12 +149,7 @@ func load_data():
 		add_child(cell)
 	var index_start_cell := save_file.get_16()
 	var start_cell : Cell = get_children()[index_start_cell]
-	if not start_cell.is_revealed():
-		var highlighted_cell : Cell = HIGHLIGHT_CELL.instantiate()
-		highlighted_cell._content = start_cell._content
-		remove_child(start_cell)
-		add_child(highlighted_cell)
-		move_child(highlighted_cell, index_start_cell)
+	start_cell.make_start_cell()
 	var number_of_groups := save_file.get_8()
 	for id in number_of_groups:
 		var group_name := "area" + str(id)

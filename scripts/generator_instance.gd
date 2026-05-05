@@ -1,7 +1,6 @@
 extends RefCounted
 
 
-const BOMB = 13
 const NO_KNOWLEDGE = 12
 
 var rng : RandomNumberGenerator
@@ -37,15 +36,6 @@ func create_grid(size: int, number_of_bombs: int, result_callback: Callable, sur
 	var index : int
 	
 	_reset_run()
-	#_start_field = 12
-	#bomb_count = 5
-	#for i in [0, 9, 21, 30, 32]:
-		#_grid[i] = BOMB
-		#for n in _surrounding_neighbours[i]:
-			#if _grid[n] != BOMB:
-				#_grid[n] += 1
-				#
-	#print(_is_solvable(5))
 		
 	while bomb_count < number_of_bombs and running:
 		index = _add_bomb()
@@ -103,19 +93,19 @@ func _add_bomb() -> int:
 		var i = rng.randi_range(0, untested_size - 1)
 		bomb_index = _untested_fields[i]
 		_untested_fields.remove_at(i)
-		_grid[bomb_index] = BOMB
+		_grid[bomb_index] = Cell.BOMB
 		break
 	for n in _surrounding_neighbours[bomb_index]:
-		if _grid[n] != BOMB:
+		if _grid[n] != Cell.BOMB:
 			_grid[n] += 1
 	return bomb_index
 	
 	
 func _revert_bomb(bomb_index: int) -> void:
-	assert(_grid[bomb_index] == BOMB)
+	assert(_grid[bomb_index] == Cell.BOMB)
 	var count := 0
 	for n in _surrounding_neighbours[bomb_index]:
-		if _grid[n] != BOMB:
+		if _grid[n] != Cell.BOMB:
 			_grid[n] -= 1
 		else:
 			count += 1
@@ -140,7 +130,7 @@ func _is_solvable(bomb_count: int) -> bool:
 		# pop first
 		var current = work_list[0] 
 		work_list.remove_at(0)
-		assert(_grid[current] != BOMB)
+		assert(_grid[current] != Cell.BOMB)
 		
 		if _grid[current] == 0:
 			# If the field shows a 0, then the rest of the zeros and bordering
@@ -171,17 +161,17 @@ func _is_solvable(bomb_count: int) -> bool:
 				for n in _surrounding_neighbours[cell]:
 					if n not in work_list and \
 					grid_knowledge[n] != NO_KNOWLEDGE and \
-					grid_knowledge[n] != BOMB:
+					grid_knowledge[n] != Cell.BOMB:
 						work_list.append(n)
 			# These cells are bombs and should be marked as such
 			var bombs := result[1]
 			# Update the surrounding bomb information
 			for bomb in bombs:
 				found_bombs += 1
-				grid_knowledge[bomb] = BOMB
+				grid_knowledge[bomb] = Cell.BOMB
 				var bomb_neighbours := _surrounding_neighbours[bomb]
 				for bomb_neighbour in bomb_neighbours:
-					if grid_knowledge[bomb_neighbour] != BOMB \
+					if grid_knowledge[bomb_neighbour] != Cell.BOMB \
 						and grid_knowledge[bomb_neighbour] != NO_KNOWLEDGE \
 						and bomb_neighbour != current \
 						and bomb_neighbour not in work_list:
@@ -215,7 +205,7 @@ func _check_patterns(index: int, grid_knowledge: PackedInt32Array) -> Array[Pack
 		var neighbour_value := grid_knowledge[n]
 		if neighbour_value == NO_KNOWLEDGE:
 			unknown_list.append(n)
-		elif neighbour_value == BOMB:
+		elif neighbour_value == Cell.BOMB:
 			bomb_list.append(n)
 		elif neighbour_value > 0 and n in axis_neighbours:
 			remaining_list.append(n)
@@ -243,7 +233,7 @@ func _check_patterns(index: int, grid_knowledge: PackedInt32Array) -> Array[Pack
 		var r_unknown_list := PackedInt32Array()
 		for n in r_neighbours:
 			# Determine the actual field value
-			if grid_knowledge[n] == BOMB:
+			if grid_knowledge[n] == Cell.BOMB:
 				r_field -= 1
 			# Collect unknown fields
 			elif grid_knowledge[n] == NO_KNOWLEDGE:
