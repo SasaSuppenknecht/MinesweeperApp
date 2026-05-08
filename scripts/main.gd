@@ -4,6 +4,11 @@ func _ready():
 	EventBus.game_won.connect(_on_game_won)
 	EventBus.game_over.connect(_on_game_over)
 	
+	var placeholder := PlaceholderTexture2D.new()
+	$ResetConfirmation.add_theme_icon_override("close", placeholder)
+	#$ResetConfirmation.get_label().
+	$LevelSettings.add_theme_icon_override("close", placeholder)
+	
 	
 func _on_game_won():
 	var accept_dialog := AcceptDialog.new()
@@ -30,4 +35,16 @@ func _configure_dialog(dialog: AcceptDialog):
 	dialog.confirmed.connect($%GameBoard.create_level)
 	add_child(dialog)
 	move_child(dialog, 0)
+	dialog.theme = load("res://assets/menu_theme.tres")
 	dialog.popup_centered(Vector2i(50, 50))
+
+
+func _on_check_box_toggled(toggled_on: bool) -> void:
+	
+	var id = get_window().get_window_id()
+	print(toggled_on)
+	print(id)
+	if toggled_on:
+		get_window().mode = Window.MODE_FULLSCREEN
+	else:
+		get_window().mode = Window.MODE_WINDOWED

@@ -14,14 +14,11 @@ const TEXTURE_SIZE = 100
 const BASE_NUMBER_OFFSET = 2
 const BOMB = 9
 
-const BOMB_LETTER = "B"
-const FLAG_LETTER = "F"
-
 var _has_flag: bool = false
 var _content: int = -1
 
 static var tap_start_position: Vector2
-static var start_cell : Cell = null
+static var start_cell: Cell = null
 
 
 func set_content(content: int):
@@ -35,7 +32,7 @@ func reveal_cell(recurse: bool = true):
 	if not is_revealed():
 		if self == start_cell:
 			remove_child(get_child(0))
-		EventBus.cell_revealed.emit(self)
+		EventBus.cell_revealed.emit(self )
 	
 	if _content == BOMB:
 		state = Field.BOMB

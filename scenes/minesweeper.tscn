@@ -5,6 +5,14 @@
 [ext_resource type="Script" uid="uid://dy7sfphvgrjpu" path="res://scripts/camera_control.gd" id="1_xhb67"]
 [ext_resource type="Script" uid="uid://baw37j0j8ryyq" path="res://scripts/level_settings.gd" id="2_f7qek"]
 [ext_resource type="Script" uid="uid://bci7fv1akbxma" path="res://scripts/game_board.gd" id="2_xhb67"]
+[ext_resource type="Theme" uid="uid://cvvmwt70o5ug1" path="res://assets/menu_theme.tres" id="3_rm57e"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_rm57e"]
+bg_color = Color(0, 0, 0, 1)
+expand_margin_left = 6.0
+expand_margin_top = 3.0
+expand_margin_right = 6.0
+expand_margin_bottom = 3.0
 
 [sub_resource type="GDScript" id="GDScript_f7qek"]
 script/source = "extends Button
@@ -24,44 +32,69 @@ script = ExtResource("1_2m5h3")
 
 [node name="ResetConfirmation" type="ConfirmationDialog" parent="." unique_id=1716652435]
 oversampling_override = 1.0
+title = ""
 initial_position = 1
-size = Vector2i(268, 100)
+size = Vector2i(300, 115)
+unresizable = true
+theme = ExtResource("3_rm57e")
 ok_button_text = "Confirm"
-dialog_text = "Level will be reset. Are you sure?"
+dialog_text = "Level will be reset. 
+Are you sure?"
 
 [node name="LevelSettings" type="ConfirmationDialog" parent="." unique_id=2054589235]
 oversampling_override = 1.0
 title = "Level Settings"
 initial_position = 1
-size = Vector2i(200, 177)
+size = Vector2i(260, 210)
+unresizable = true
+theme = ExtResource("3_rm57e")
 ok_button_text = "Create"
 script = ExtResource("2_f7qek")
 
-[node name="VBoxContainer" type="VBoxContainer" parent="LevelSettings" unique_id=1460173657]
-offset_left = 8.0
-offset_top = 8.0
-offset_right = 192.0
+[node name="Panel" type="Panel" parent="LevelSettings" unique_id=1548401615]
+offset_left = 10.0
+offset_top = 10.0
+offset_right = 250.0
+offset_bottom = 156.0
+
+[node name="VBoxContainer" type="VBoxContainer" parent="LevelSettings/Panel" unique_id=1460173657]
+layout_mode = 0
+offset_right = 184.0
 offset_bottom = 128.0
 
-[node name="Label" type="Label" parent="LevelSettings/VBoxContainer" unique_id=565519101]
+[node name="HBoxContainer" type="HBoxContainer" parent="LevelSettings/Panel/VBoxContainer" unique_id=175272320]
+layout_mode = 2
+
+[node name="CheckBox" type="CheckBox" parent="LevelSettings/Panel/VBoxContainer/HBoxContainer" unique_id=1636583937]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="LevelSettings/Panel/VBoxContainer/HBoxContainer" unique_id=1270809459]
+layout_mode = 2
+text = "Toggle immersive Mode"
+
+[node name="Label" type="Label" parent="LevelSettings/Panel/VBoxContainer" unique_id=565519101]
 layout_mode = 2
 text = "Grid Size:"
 
-[node name="GridSize" type="SpinBox" parent="LevelSettings/VBoxContainer" unique_id=1166953558]
+[node name="GridSize" type="SpinBox" parent="LevelSettings/Panel/VBoxContainer" unique_id=1166953558]
 unique_name_in_owner = true
+custom_minimum_size = Vector2(150, 0)
 layout_mode = 2
+size_flags_horizontal = 0
 min_value = 3.0
 max_value = 50.0
 value = 3.0
 rounded = true
 
-[node name="Label2" type="Label" parent="LevelSettings/VBoxContainer" unique_id=996471323]
+[node name="Label2" type="Label" parent="LevelSettings/Panel/VBoxContainer" unique_id=996471323]
 layout_mode = 2
 text = "Bomb Count:"
 
-[node name="BombCount" type="SpinBox" parent="LevelSettings/VBoxContainer" unique_id=477383529]
+[node name="BombCount" type="SpinBox" parent="LevelSettings/Panel/VBoxContainer" unique_id=477383529]
 unique_name_in_owner = true
+custom_minimum_size = Vector2(150, 0)
 layout_mode = 2
+size_flags_horizontal = 0
 min_value = 1.0
 value = 1.0
 
@@ -70,6 +103,7 @@ layout_mode = 1
 anchors_preset = -1
 anchor_right = 1.0
 anchor_bottom = 0.15
+theme = ExtResource("3_rm57e")
 
 [node name="MarginContainer" type="MarginContainer" parent="Panel" unique_id=1689478958]
 layout_mode = 1
@@ -90,7 +124,9 @@ layout_mode = 2
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 2
-theme_override_font_sizes/font_size = 32
+theme_override_colors/font_color = Color(1, 0, 0, 1)
+theme_override_font_sizes/font_size = 30
+theme_override_styles/normal = SubResource("StyleBoxFlat_rm57e")
 text = "000"
 script = ExtResource("1_p5s82")
 
@@ -98,14 +134,12 @@ script = ExtResource("1_p5s82")
 layout_mode = 2
 size_flags_horizontal = 6
 size_flags_vertical = 4
-theme_override_font_sizes/font_size = 24
 text = "Settings"
 
 [node name="Reset" type="Button" parent="Panel/MarginContainer/HBoxContainer" unique_id=420025478]
 layout_mode = 2
 size_flags_horizontal = 10
 size_flags_vertical = 4
-theme_override_font_sizes/font_size = 24
 text = "Reset"
 script = SubResource("GDScript_f7qek")
 
@@ -147,6 +181,7 @@ script = ExtResource("2_xhb67")
 [connection signal="about_to_popup" from="LevelSettings" to="LevelSettings" method="_on_about_to_popup"]
 [connection signal="canceled" from="LevelSettings" to="LevelSettings" method="_on_canceled"]
 [connection signal="confirmed" from="LevelSettings" to="LevelSettings" method="_on_confirmed"]
-[connection signal="value_changed" from="LevelSettings/VBoxContainer/GridSize" to="LevelSettings" method="_on_grid_size_value_changed"]
+[connection signal="toggled" from="LevelSettings/Panel/VBoxContainer/HBoxContainer/CheckBox" to="." method="_on_check_box_toggled"]
+[connection signal="value_changed" from="LevelSettings/Panel/VBoxContainer/GridSize" to="LevelSettings" method="_on_grid_size_value_changed"]
 [connection signal="pressed" from="Panel/MarginContainer/HBoxContainer/Settings" to="LevelSettings" method="_on_settings_pressed"]
 [connection signal="pressed" from="Panel/MarginContainer/HBoxContainer/Reset" to="ResetConfirmation" method="popup_centered"]

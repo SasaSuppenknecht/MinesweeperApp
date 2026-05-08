@@ -1,0 +1,24 @@
+[gd_resource type="Theme" format=3 uid="uid://cvvmwt70o5ug1"]
+
+[ext_resource type="FontFile" uid="uid://vck6x7cyefxn" path="res://assets/digital-7-font/Digital7Mono-Yz9J4.ttf" id="1_tf8oi"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_hqjoi"]
+border_width_left = 10
+border_width_top = 10
+border_width_right = 10
+border_width_bottom = 10
+border_color = Color(0.31719273, 0.26624534, 0.2560606, 1)
+expand_margin_left = 10.0
+expand_margin_top = 10.0
+expand_margin_right = 10.0
+expand_margin_bottom = 10.0
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_tf8oi"]
+
+[resource]
+AcceptDialog/styles/panel = SubResource("StyleBoxFlat_hqjoi")
+Button/font_sizes/font_size = 24
+Control/fonts/font = ExtResource("1_tf8oi")
+Label/font_sizes/font_size = 22
+LineEdit/font_sizes/font_size = 20
+Panel/styles/panel = SubResource("StyleBoxFlat_tf8oi")
