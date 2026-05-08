@@ -3,14 +3,14 @@ extends RefCounted
 
 const NO_KNOWLEDGE = 12
 
-var rng : RandomNumberGenerator
+var rng: RandomNumberGenerator
 
 # Global variables to avoid passing around values to helper functions
 var _grid := PackedInt32Array()
 var _untested_fields := PackedInt32Array()
-var _start_field : int
-var _size : int
-var _number_of_cells : int
+var _start_field: int
+var _size: int
+var _number_of_cells: int
 var _surrounding_neighbours: Array[PackedInt32Array]
 
 var running := true
@@ -21,7 +21,7 @@ func _init():
 	#rng.seed = 42
 
 @warning_ignore_start("narrowing_conversion")
-func create_grid(size: int, number_of_bombs: int, result_callback: Callable, surrounding_neighbours : Array[PackedInt32Array]) -> void:
+func create_grid(size: int, number_of_bombs: int, result_callback: Callable, surrounding_neighbours: Array[PackedInt32Array]) -> void:
 	assert(size >= 5)
 	assert(number_of_bombs > 0)
 	assert(number_of_bombs < size * size)
@@ -33,7 +33,7 @@ func create_grid(size: int, number_of_bombs: int, result_callback: Callable, sur
 	
 	_start_field = rng.randi_range(0, _number_of_cells - 1)
 	var bomb_count := 0
-	var index : int
+	var index: int
 	
 	_reset_run()
 		
@@ -51,7 +51,7 @@ func create_grid(size: int, number_of_bombs: int, result_callback: Callable, sur
 
 	if running:
 		# calculate zero areas
-		var zero_areas : Array[PackedInt32Array] = []
+		var zero_areas: Array[PackedInt32Array] = []
 		var unprocessed_zeros := PackedInt32Array()
 		for cell in _number_of_cells:
 			if _grid[cell] == 0:
@@ -73,7 +73,7 @@ func _reset_run():
 	_grid.fill(0)
 	_untested_fields = range(0, _number_of_cells)
 	# Heuristic: Prevent bomb placement at coordinate (2, 2) and all other mirrored ones
-	var remove_value : Callable = func(value):
+	var remove_value: Callable = func(value):
 		_untested_fields.remove_at(_untested_fields.bsearch(value))
 	remove_value.call(2 + _size * 2)
 	remove_value.call(_size - 3 + _size * 2)
@@ -120,7 +120,7 @@ func _is_solvable(bomb_count: int) -> bool:
 	var work_list := PackedInt32Array()
 	work_list.append(_start_field)
 	
-	var found_bombs : int = 0
+	var found_bombs: int = 0
 	
 	while not work_list.is_empty() and running:
 		if found_bombs == bomb_count:
@@ -128,7 +128,7 @@ func _is_solvable(bomb_count: int) -> bool:
 			return true
 		
 		# pop first
-		var current = work_list[0] 
+		var current = work_list[0]
 		work_list.remove_at(0)
 		assert(_grid[current] != Cell.BOMB)
 		
@@ -181,7 +181,7 @@ func _is_solvable(bomb_count: int) -> bool:
 
 func _get_axis_neighbours(index) -> PackedInt32Array:
 	var neighbours := _surrounding_neighbours[index]
-	var axis_neighbours : PackedInt32Array
+	var axis_neighbours: PackedInt32Array
 	match neighbours.size():
 		3:
 			axis_neighbours = neighbours.slice(0, 2)
@@ -195,7 +195,7 @@ func _get_axis_neighbours(index) -> PackedInt32Array:
 func _check_patterns(index: int, grid_knowledge: PackedInt32Array) -> Array[PackedInt32Array]:
 	var neighbours := _surrounding_neighbours[index]
 	# Determine axis neighbours
-	var axis_neighbours : PackedInt32Array = _get_axis_neighbours(index)
+	var axis_neighbours: PackedInt32Array = _get_axis_neighbours(index)
 
 	# Count unknown cells and bombs containing cells around index
 	var unknown_list := PackedInt32Array()
@@ -289,16 +289,17 @@ func _pattern_helper(list1: PackedInt32Array, list2: PackedInt32Array) -> int:
 ## - a list of indices containing zeros
 ## - a list of new work items
 func _reveal_zero_area(start_index: int) -> Array[PackedInt32Array]:
-	assert(_grid[start_index] == 0) 
+	assert(_grid[start_index] == 0)
 	var work_list := PackedInt32Array()
 	work_list.append(start_index)
 	
 	var zeros := PackedInt32Array()
+	zeros.append(start_index)
 	var border := PackedInt32Array()
 	
 	while not work_list.is_empty():
 		# pop first
-		var current = work_list[0] 
+		var current = work_list[0]
 		work_list.remove_at(0)
 		
 		var neighbours := _surrounding_neighbours[current]
@@ -308,6 +309,7 @@ func _reveal_zero_area(start_index: int) -> Array[PackedInt32Array]:
 					work_list.append(n)
 					zeros.append(n)
 			else:
-				border.append(n)
+				if n not in border:
+					border.append(n)
 	
 	return [zeros, border]
