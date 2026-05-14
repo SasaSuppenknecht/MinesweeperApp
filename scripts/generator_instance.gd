@@ -44,10 +44,11 @@ func create_grid(size: int, number_of_bombs: int, result_callback: Callable, sur
 			_reset_run()
 			bomb_count = 0
 			continue
-		if _is_solvable(bomb_count):
-			bomb_count += 1
-		else:
+		bomb_count += 1
+		if not _is_solvable(bomb_count):
+			bomb_count -= 1
 			_revert_bomb(index)
+			
 
 	if running:
 		# calculate zero areas
